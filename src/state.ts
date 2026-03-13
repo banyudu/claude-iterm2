@@ -1,0 +1,107 @@
+import fs from "node:fs";
+import path from "node:path";
+import { spawn } from "node:child_process";
+import { gradientStateDir, enableGradient, enableDoneToWaiting, doneToWaitingDelay } from "./config.js";
+import { getTtyPath } from "./iterm2.js";
+import { tsxBin, srcFile } from "./paths.js";
+
+const STALE_THRESHOLD = 12 * 3600;
+
+export function getSessionId(): string {
+  if (process.env.ITERM_SESSION_ID) return process.env.ITERM_SESSION_ID;
+  try {
+    const tty = fs.readlinkSync("/dev/fd/0");
+    return tty.replace("/dev/", "").replace(/\//g, "_");
+  } catch {
+    return "unknown";
+  }
+}
+
+function ensureStateDir(): void {
+  fs.mkdirSync(gradientStateDir, { recursive: true });
+}
+
+function pidFilePath(sessionId: string): string {
+  return path.join(gradientStateDir, `${sessionId}.pid`);
+}
+
+function startTimeFilePath(sessionId: string): string {
+  return path.join(gradientStateDir, `${sessionId}.start_time`);
+}
+
+function timerPidFilePath(sessionId: string): string {
+  return path.join(gradientStateDir, `${sessionId}.timer_pid`);
+}
+
+function killPidFile(filePath: string): void {
+  try {
+    const pid = parseInt(fs.readFileSync(filePath, "utf-8").trim(), 10);
+    if (!isNaN(pid)) {
+      try { process.kill(pid); } catch { /* already gone */ }
+    }
+  } catch { /* file doesn't exist */ }
+  try { fs.unlinkSync(filePath); } catch { /* already gone */ }
+}
+
+function cleanStaleState(): void {
+  const now = Math.floor(Date.now() / 1000);
+  try {
+    for (const file of fs.readdirSync(gradientStateDir)) {
+      if (!file.endsWith(".start_time")) continue;
+      try {
+        const t = parseInt(fs.readFileSync(path.join(gradientStateDir, file), "utf-8").trim(), 10);
+        if (now - t > STALE_THRESHOLD) {
+          const base = file.replace(".start_time", "");
+          for (const ext of [".pid", ".start_time", ".timer_pid"]) {
+            try { fs.unlinkSync(path.join(gradientStateDir, base + ext)); } catch { /* gone */ }
+          }
+        }
+      } catch { /* ignore */ }
+    }
+  } catch { /* dir doesn't exist */ }
+}
+
+function spawnDetached(script: string, args: string[]): number | undefined {
+  const child = spawn(tsxBin, [script, ...args], {
+    detached: true,
+    stdio: "ignore",
+    cwd: process.cwd(),
+    env: process.env,
+  });
+  child.unref();
+  return child.pid;
+}
+
+export function startGradient(): void {
+  if (!enableGradient) return;
+  const sessionId = getSessionId();
+  ensureStateDir();
+  stopGradient();
+  cleanStaleState();
+
+  fs.writeFileSync(startTimeFilePath(sessionId), String(Math.floor(Date.now() / 1000)));
+
+  const pid = spawnDetached(srcFile("gradient-loop.ts"), [sessionId, getTtyPath()]);
+  if (pid) fs.writeFileSync(pidFilePath(sessionId), String(pid));
+}
+
+export function stopGradient(): void {
+  if (!enableGradient) return;
+  const sessionId = getSessionId();
+  killPidFile(pidFilePath(sessionId));
+  try { fs.unlinkSync(startTimeFilePath(sessionId)); } catch { /* gone */ }
+}
+
+export function scheduleTimer(project: string): void {
+  if (!enableDoneToWaiting) return;
+  const sessionId = getSessionId();
+  ensureStateDir();
+  cancelTimer();
+
+  const pid = spawnDetached(srcFile("timer.ts"), [String(doneToWaitingDelay), project]);
+  if (pid) fs.writeFileSync(timerPidFilePath(sessionId), String(pid));
+}
+
+export function cancelTimer(): void {
+  killPidFile(timerPidFilePath(getSessionId()));
+}

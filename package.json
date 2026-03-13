@@ -1,0 +1,19 @@
+{
+  "name": "claude-iterm2",
+  "version": "1.0.0",
+  "private": true,
+  "description": "iTerm2 visual status indicators and grid layouts for Claude Code",
+  "author": "banyudu",
+  "license": "MIT",
+  "type": "module",
+  "dependencies": {
+    "tsx": "^4.19.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "typescript": "^5.5.0"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  }
+}
