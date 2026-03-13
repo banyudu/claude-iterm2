@@ -1,0 +1,19 @@
+{
+  "name": "claude-iterm2",
+  "description": "iTerm2 visual status indicators and grid layouts for Claude Code",
+  "owner": {
+    "name": "banyudu"
+  },
+  "plugins": [
+    {
+      "name": "iterm2",
+      "description": "Automatically changes iTerm2 tab colors, badges, and sends notifications based on Claude Code agent events",
+      "version": "1.0.0",
+      "author": {
+        "name": "banyudu"
+      },
+      "source": "./",
+      "category": "developer-tools"
+    }
+  ]
+}
