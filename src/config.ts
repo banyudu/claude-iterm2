@@ -1,16 +1,27 @@
 import type { Status, StatusConfig } from "./types.js";
+import { load as loadSettings } from "./settings.js";
 
-function envBool(key: string, defaultVal: boolean): boolean {
+const settings = loadSettings();
+
+// Env vars override saved settings
+function envBool(key: string, settingVal: boolean): boolean {
   const v = process.env[key];
-  if (v === undefined) return defaultVal;
+  if (v === undefined) return settingVal;
   return v === "1" || v === "true";
 }
 
-function envInt(key: string, defaultVal: number): number {
+function envBoolInverted(key: string, settingVal: boolean): boolean {
+  // For AI_DISABLE_SOUND: env "1" means disabled, setting true means enabled
   const v = process.env[key];
-  if (v === undefined) return defaultVal;
+  if (v === undefined) return !settingVal;
+  return v === "1" || v === "true";
+}
+
+function envInt(key: string, settingVal: number): number {
+  const v = process.env[key];
+  if (v === undefined) return settingVal;
   const n = parseInt(v, 10);
-  return isNaN(n) ? defaultVal : n;
+  return isNaN(n) ? settingVal : n;
 }
 
 function envFloat(key: string, defaultVal: number): number {
@@ -24,18 +35,18 @@ function envStr(key: string, defaultVal: string): string {
   return process.env[key] ?? defaultVal;
 }
 
-// Feature toggles
-export const enableTabColor = envBool("AI_ENABLE_TAB_COLOR", true);
-export const enableBadge = envBool("AI_ENABLE_BADGE", true);
-export const enableBgTint = envBool("AI_ENABLE_BG_TINT", false);
-export const enableNotification = envBool("AI_ENABLE_NOTIFICATION", true);
-export const disableSound = envBool("AI_DISABLE_SOUND", false);
-export const enableGradient = envBool("AI_ENABLE_GRADIENT", true);
-export const enableDoneToWaiting = envBool("AI_ENABLE_DONE_TO_WAITING", true);
+// Feature toggles: settings file -> env var override
+export const enableTabColor = envBool("AI_ENABLE_TAB_COLOR", settings.tabColor);
+export const enableBadge = envBool("AI_ENABLE_BADGE", settings.badge);
+export const enableBgTint = envBool("AI_ENABLE_BG_TINT", settings.bgTint);
+export const enableNotification = envBool("AI_ENABLE_NOTIFICATION", settings.notification);
+export const disableSound = envBoolInverted("AI_DISABLE_SOUND", settings.sound);
+export const enableGradient = envBool("AI_ENABLE_GRADIENT", settings.gradient);
+export const enableDoneToWaiting = envBool("AI_ENABLE_DONE_TO_WAITING", settings.doneToWaiting);
 
 // Timing
-export const gradientDuration = envInt("AI_GRADIENT_DURATION", 60);
-export const doneToWaitingDelay = envInt("AI_DONE_TO_WAITING_DELAY", 60);
+export const gradientDuration = envInt("AI_GRADIENT_DURATION", settings.gradientDuration);
+export const doneToWaitingDelay = envInt("AI_DONE_TO_WAITING_DELAY", settings.doneToWaitingDelay);
 
 // Sound
 export const soundVol = envFloat("AI_SOUND_VOL", 3);

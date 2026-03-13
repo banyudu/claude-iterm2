@@ -1,33 +1,50 @@
 ---
-description: Set up iTerm2 shell integration for Claude Code visual status indicators
-allowed-tools: Bash, Read, Edit
+description: Set up iTerm2 visual status indicators — configure which features to enable
+allowed-tools: Bash
 ---
 
 # iTerm2 Setup
 
-Guide the user through setting up shell integration for iTerm2 visual status indicators.
+Guide the user through initial setup of iTerm2 visual status indicators.
 
 ## Steps
 
-1. **Detect shell**: Check `$SHELL` to determine if using bash or zsh.
+### 1. Check prerequisites
 
-2. **Check prerequisites**:
-   - Verify iTerm2 is the terminal (`$TERM_PROGRAM` or `$ITERM_SESSION_ID`)
-   - Check if `terminal-notifier` is installed: `command -v terminal-notifier`
-   - If not installed, suggest: `brew install terminal-notifier`
+```bash
+echo "TERM_PROGRAM=$TERM_PROGRAM"
+echo "ITERM_SESSION_ID=$ITERM_SESSION_ID"
+command -v node && node --version || echo "node: not found"
+command -v terminal-notifier || echo "terminal-notifier: not found (optional — install with: brew install terminal-notifier)"
+```
 
-3. **Add source line**: Add the following to the user's shell config (`.bashrc` or `.zshrc`):
-   ```bash
-   # Claude Code iTerm2 status indicators
-   source "${CLAUDE_PLUGIN_ROOT}/scripts/iterm2-ai-status.sh"
-   ```
+### 2. Check if config exists
 
-4. **Explain what this enables**:
-   - `cc` command: wrapper around `claude` with automatic status tracking
-   - `ai_working`, `ai_waiting`, `ai_done`, `ai_error`, `ai_reset` functions
-   - `ai_status` to check current state
-   - Shell hooks already work automatically via the plugin's hooks.json
+```bash
+${CLAUDE_PLUGIN_ROOT}/node_modules/.bin/tsx ${CLAUDE_PLUGIN_ROOT}/src/cli.ts show-config
+```
 
-5. **Optional configuration**: Show available environment variables for customization (colors, sounds, notifications).
+### 3. Ask about features
 
-Ask the user before modifying any config files.
+Present each feature and ask whether to enable/disable it. The features are:
+
+- **Tab colors** (`tabColor`) — Changes tab bar color based on status. Default: on
+- **Badge text** (`badge`) — Shows status text (Working.../Done/etc.) as a watermark in the pane. Default: on
+- **Background tint** (`bgTint`) — Subtle background color change. Default: off (can be distracting)
+- **Desktop notifications** (`notification`) — macOS notification when tasks complete. Default: on
+- **Sound** (`sound`) — Sound effects on status change. Default: on
+- **Gradient animation** (`gradient`) — Waiting state tab color animates from yellow to orange. Default: on
+- **Auto-transition** (`doneToWaiting`) — Done state automatically becomes waiting after a delay. Default: on
+
+Ask the user which features they want. Use a simple format like:
+"Which features would you like enabled? (all are on by default except background tint)"
+
+Then apply their choices:
+
+```bash
+${CLAUDE_PLUGIN_ROOT}/node_modules/.bin/tsx ${CLAUDE_PLUGIN_ROOT}/src/cli.ts set <key> <value>
+```
+
+### 4. Confirm
+
+Show the final config and explain that settings can be changed anytime with `/iterm2:config`.

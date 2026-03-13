@@ -20,15 +20,7 @@ cd claude-iterm2 && npm install
 claude plugin add /path/to/claude-iterm2
 ```
 
-Hooks auto-register and tab colors start working immediately.
-
-### Optional: Shell Integration
-
-For the `cc` wrapper and manual status functions, add to your `.bashrc` or `.zshrc`:
-
-```bash
-source /path/to/claude-iterm2/scripts/iterm2-ai-status.sh
-```
+That's it. Hooks auto-register and tab colors start working immediately.
 
 ### Optional: Desktop Notifications
 
@@ -46,70 +38,53 @@ Just use Claude Code normally. Tab colors update automatically:
 - Task completes → green tab + notification
 - Error occurs → red tab
 
-### Manual Status Control
+### Setup & Configuration
 
-```bash
-ai_working "my-project"   # Blue tab
-ai_waiting "my-project"   # Yellow tab with gradient
-ai_done "my-project"      # Green tab + notification
-ai_error "my-project"     # Red tab
-ai_reset                  # Reset to default
-ai_status                 # Show current status
-ai_show_waiting           # List all waiting sessions
+```
+/iterm2:setup           # Interactive feature selection
+/iterm2:config          # View or change settings
+/iterm2:config set badge false   # Disable badge text
 ```
 
-### Claude Wrapper
-
-```bash
-cc "fix the login bug"    # Runs claude with auto status tracking
-```
+Settings are stored in `~/.config/claude-iterm2/config.json`.
 
 ### Grid Layout
 
-```bash
-/iterm2:grid 2x2          # 4-pane grid
-/iterm2:grid 3x3          # 9-pane grid
+```
+/iterm2:grid 2x2        # 4-pane grid
+/iterm2:grid 3x3        # 9-pane grid
 ```
 
-## Configuration
+### Manual Status Control
 
-All settings via environment variables. Add to your shell config:
-
-```bash
-# Tab colors (on by default)
-export AI_ENABLE_TAB_COLOR=1
-
-# Badge text (on by default)
-export AI_ENABLE_BADGE=1
-
-# Background tint (off by default)
-export AI_ENABLE_BG_TINT=0
-
-# Desktop notifications (on by default)
-export AI_ENABLE_NOTIFICATION=1
-
-# Sound notifications
-export AI_DISABLE_SOUND=0           # Set to 1 to disable
-export AI_SOUND_VOL=3               # Volume 0-10
-export AI_SOUND_DONE=Glass          # Sound name or path
-export AI_SOUND_WAITING=Tink
-export AI_SOUND_ERROR=Pop
-
-# Gradient animation (on by default)
-export AI_ENABLE_GRADIENT=1
-export AI_GRADIENT_DURATION=60      # Seconds for full gradient
-
-# Auto-transition done → waiting (on by default)
-export AI_ENABLE_DONE_TO_WAITING=1
-export AI_DONE_TO_WAITING_DELAY=60  # Seconds
 ```
+/iterm2:status working  # Blue tab
+/iterm2:status done     # Green tab
+/iterm2:status reset    # Reset to default
+```
+
+## Settings
+
+| Setting | Type | Default | Description |
+|---------|------|---------|-------------|
+| tabColor | bool | true | Tab color changes (blue/yellow/green/red) |
+| badge | bool | true | Badge text watermark (Working.../Done/etc.) |
+| bgTint | bool | false | Background color tint |
+| notification | bool | true | Desktop notifications on completion |
+| sound | bool | true | Sound notifications |
+| gradient | bool | true | Gradient animation for waiting state |
+| doneToWaiting | bool | true | Auto-transition from done to waiting |
+| gradientDuration | number | 60 | Gradient duration (seconds) |
+| doneToWaitingDelay | number | 60 | Done-to-waiting delay (seconds) |
+
+Environment variables (e.g., `AI_ENABLE_TAB_COLOR=0`) override saved settings.
 
 ## Requirements
 
 - macOS
 - iTerm2
 - Claude Code
-- Node.js (for tsx runtime)
+- Node.js
 - `terminal-notifier` (optional, for desktop notifications)
 
 ## License
