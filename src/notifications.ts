@@ -38,7 +38,7 @@ export function sendNotification(message: string): void {
       repeat with w in windows
         repeat with t in tabs of w
           repeat with s in sessions of t
-            if unique ID of s is "${uuid}" then
+            if unique ID of s is "${uuid.replace(/["\\]/g, "")}" then
               select t
               select s
               return

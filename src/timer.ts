@@ -2,7 +2,6 @@
 // Spawned as a detached subprocess by state.ts.
 // Usage: timer.ts <delay_seconds> <project_name>
 
-import path from "node:path";
 import { setWaiting } from "./status.js";
 
 const delay = parseInt(process.argv[2] ?? "60", 10);

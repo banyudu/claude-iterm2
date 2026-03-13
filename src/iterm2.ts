@@ -28,6 +28,9 @@ function getTtyFd(): number | null {
   if (_ttyFd !== null) return _ttyFd;
   try {
     _ttyFd = fs.openSync(getTtyPath(), "w");
+    process.on("exit", () => {
+      try { fs.closeSync(_ttyFd!); } catch {}
+    });
     return _ttyFd;
   } catch {
     return null;

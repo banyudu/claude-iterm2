@@ -21,12 +21,15 @@ switch (action) {
   case "reset":
     reset();
     break;
-  case "status":
-    console.log(`AI Status: ${process.env.AI_PANE_STATUS ?? "idle"}`);
-    if (process.env.AI_PROJECT_NAME) {
-      console.log(`Project: ${process.env.AI_PROJECT_NAME}`);
+  case "status": {
+    const statusVar = process.env.AI_PANE_STATUS ?? process.env.ai_status ?? "idle";
+    const projectVar = process.env.AI_PROJECT_NAME ?? process.env.ai_project;
+    console.log(`AI Status: ${statusVar}`);
+    if (projectVar) {
+      console.log(`Project: ${projectVar}`);
     }
     break;
+  }
 
   case "show-config": {
     const settings = load();
