@@ -1,6 +1,6 @@
 import path from "node:path";
 import type { HookInput } from "./types.js";
-import { setWorking, setWaiting, setDone, setError } from "./status.js";
+import { setWorking, setWaiting, setDone, setError, reset } from "./status.js";
 
 function readStdin(): Promise<string> {
   return new Promise((resolve, reject) => {
@@ -60,6 +60,10 @@ async function main(): Promise<void> {
 
     case "PermissionRequest":
       setWaiting(tool_name ? `${project}: ${tool_name}` : project);
+      break;
+
+    case "SessionEnd":
+      reset();
       break;
   }
 }

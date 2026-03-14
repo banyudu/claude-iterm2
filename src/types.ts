@@ -5,7 +5,8 @@ export type HookEventName =
   | "PostToolUseFailure"
   | "Stop"
   | "Notification"
-  | "PermissionRequest";
+  | "PermissionRequest"
+  | "SessionEnd";
 
 export type Status = "idle" | "working" | "waiting" | "done" | "error";
 
