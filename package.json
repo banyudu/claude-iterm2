@@ -1,11 +1,29 @@
 {
   "name": "claude-iterm2",
   "version": "0.0.1",
-  "private": true,
   "description": "iTerm2 visual status indicators and grid layouts for Claude Code",
   "author": "banyudu",
   "license": "MIT",
   "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/banyudu/claude-iterm2.git"
+  },
+  "homepage": "https://banyudu.github.io/claude-iterm2/",
+  "keywords": ["claude", "claude-code", "iterm2", "terminal", "status"],
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
+  },
+  "files": [
+    "src",
+    "hooks",
+    "commands",
+    "skills",
+    ".claude-plugin",
+    "tsconfig.json",
+    "README.md",
+    "LICENSE"
+  ],
   "dependencies": {
     "tsx": "^4.19.0"
   },
@@ -14,6 +32,7 @@
     "typescript": "^5.5.0"
   },
   "scripts": {
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "prepublishOnly": "tsc --noEmit"
   }
 }
