@@ -14,13 +14,28 @@ iTerm2 visual status indicators and grid layouts for Claude Code.
 
 ## Installation
 
+### From GitHub Marketplace (recommended)
+
 ```bash
-git clone <repo-url> claude-iterm2
-cd claude-iterm2 && npm install
-claude plugin add /path/to/claude-iterm2
+# Add the marketplace (one-time)
+claude plugin marketplace add banyudu/claude-iterm2
+
+# Install the plugin
+claude plugin install iterm2@claude-iterm2
 ```
 
-That's it. Hooks auto-register and tab colors start working immediately.
+### From Local Clone
+
+```bash
+git clone git@github.com:banyudu/claude-iterm2.git
+cd claude-iterm2 && npm install
+```
+
+Then add it to your local marketplace or symlink it into `~/.claude/plugins/`.
+
+### Post-Install
+
+Restart Claude Code to activate. Hooks auto-register and tab colors start working immediately.
 
 ### Optional: Desktop Notifications
 

@@ -2,6 +2,9 @@
 
 Claude Code plugin for iTerm2 visual status indicators.
 
+- **Repo/marketplace name**: `claude-iterm2`
+- **Plugin name**: `iterm2` (used in slash commands like `/iterm2:config`)
+
 ## Architecture
 
 - **All logic is TypeScript** in `src/` — hooks, status, notifications, gradient, grid, CLI
