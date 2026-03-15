@@ -80,10 +80,12 @@ function tick(): void {
 
   if (elapsed < 60) {
     setBadge(`Waiting ${elapsed}s`);
+  } else if (elapsed < 3600) {
+    const m = +(elapsed / 60).toFixed(0);
+    setBadge(`Waiting ${m}m`);
   } else {
-    const m = Math.floor(elapsed / 60);
-    const s = elapsed % 60;
-    setBadge(`Waiting ${m}m ${s}s`);
+    const h = +(elapsed / 3600).toFixed(1);
+    setBadge(`Waiting ${h}h`);
   }
 }
 
