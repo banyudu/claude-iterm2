@@ -64,27 +64,27 @@ export const gradientStateDir = "/tmp/ai-gradient";
 // Status visual configs
 export const statusConfigs: Record<Exclude<Status, "idle">, StatusConfig> = {
   working: {
-    color: { r: 30, g: 100, b: 200 },
+    color: { r: 59, g: 130, b: 246 },
     badge: "Working...",
-    bg: "1a2a3a",
+    bg: "0d1a2e",
     titlePrefix: "[...]",
   },
   waiting: {
-    color: { r: 220, g: 180, b: 0 },
+    color: { r: 234, g: 179, b: 8 },
     badge: "Input Needed",
-    bg: "2a2a1a",
+    bg: "1e1c0d",
     titlePrefix: "[?]",
   },
   done: {
-    color: { r: 40, g: 180, b: 80 },
+    color: { r: 34, g: 197, b: 94 },
     badge: "Done",
-    bg: "1a2a1a",
+    bg: "0d1e10",
     titlePrefix: "[OK]",
   },
   error: {
-    color: { r: 220, g: 60, b: 60 },
+    color: { r: 239, g: 68, b: 68 },
     badge: "Error",
-    bg: "2a1a1a",
+    bg: "1e0d0d",
     titlePrefix: "[!]",
   },
 };
