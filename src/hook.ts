@@ -1,6 +1,7 @@
 import path from "node:path";
 import type { HookInput } from "./types.js";
 import { setWorking, setWaiting, setDone, setError, reset } from "./status.js";
+import { writeHeartbeat } from "./state.js";
 
 function readStdin(): Promise<string> {
   return new Promise((resolve, reject) => {
@@ -22,6 +23,9 @@ async function main(): Promise<void> {
 
   const project = path.basename(process.cwd());
   const { hook_event_name: event, tool_name, notification_type, is_interrupt } = input;
+
+  // Write heartbeat on every event so background processes can detect stale sessions
+  writeHeartbeat();
 
   switch (event) {
     case "UserPromptSubmit":

@@ -21,6 +21,10 @@ const END_B = 0;
 
 const pidFile = path.join(stateDir, `${sessionId}.pid`);
 const startTimeFile = path.join(stateDir, `${sessionId}.start_time`);
+const heartbeatFile = path.join(stateDir, `${sessionId}.heartbeat`);
+
+// If no heartbeat for this long, assume Claude Code has exited
+const HEARTBEAT_STALE_THRESHOLD = 120; // seconds
 
 let ttyFd: number;
 try {
@@ -52,10 +56,34 @@ function lerp(start: number, end: number, t: number): number {
   return Math.round(start + (end - start) * t);
 }
 
+function resetAndExit(): void {
+  writeTty(`\x1b]6;1;bg;*;default\x07`); // reset tab color
+  writeTty(`\x1b]1337;SetBadgeFormat=\x07`); // clear badge
+  writeTty(`\x1b]1337;SetColors=bg=default\x07`); // reset background
+
+  // Clean up state files
+  for (const f of [pidFile, startTimeFile, heartbeatFile]) {
+    try { fs.unlinkSync(f); } catch {}
+  }
+  process.exit(0);
+}
+
 function tick(): void {
   // Exit if control files are gone
   if (!fs.existsSync(pidFile) || !fs.existsSync(startTimeFile)) {
     process.exit(0);
+  }
+
+  // Check heartbeat — if stale, Claude Code has likely exited
+  try {
+    const hb = parseInt(fs.readFileSync(heartbeatFile, "utf-8").trim(), 10);
+    const now = Math.floor(Date.now() / 1000);
+    if (!isNaN(hb) && now - hb > HEARTBEAT_STALE_THRESHOLD) {
+      resetAndExit();
+    }
+  } catch {
+    // No heartbeat file — if it never existed, give benefit of doubt
+    // But if we've been running for a while, it's likely stale
   }
 
   let startTime: number;

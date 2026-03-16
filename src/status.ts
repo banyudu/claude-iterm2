@@ -17,6 +17,9 @@ import {
   stopGradient,
   scheduleTimer,
   cancelTimer,
+  startWorkingWatchdog,
+  stopWorkingWatchdog,
+  clearHeartbeat,
 } from "./state.js";
 
 function applyStatus(
@@ -35,11 +38,14 @@ function applyStatus(
 export function setWorking(project: string): void {
   stopGradient();
   cancelTimer();
+  stopWorkingWatchdog();
   applyStatus("working", project);
+  startWorkingWatchdog(project);
 }
 
 export function setWaiting(project: string): void {
   cancelTimer();
+  stopWorkingWatchdog();
   startGradient();
   applyStatus("waiting", project);
   playSound("waiting");
@@ -48,6 +54,7 @@ export function setWaiting(project: string): void {
 export function setDone(project: string): void {
   stopGradient();
   cancelTimer();
+  stopWorkingWatchdog();
   applyStatus("done", project);
   sendNotification(`AI Agent completed: ${project}`);
   playSound("done");
@@ -57,6 +64,7 @@ export function setDone(project: string): void {
 export function setError(project: string): void {
   stopGradient();
   cancelTimer();
+  stopWorkingWatchdog();
   applyStatus("error", project);
   playSound("error");
 }
@@ -64,6 +72,8 @@ export function setError(project: string): void {
 export function reset(): void {
   stopGradient();
   cancelTimer();
+  stopWorkingWatchdog();
+  clearHeartbeat();
   resetTabColor();
   clearBadge();
   resetBackground();

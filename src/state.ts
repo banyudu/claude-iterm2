@@ -6,6 +6,7 @@ import { getTtyPath } from "./iterm2.js";
 import { tsxBin, srcFile } from "./paths.js";
 
 const STALE_THRESHOLD = 12 * 3600;
+const WORKING_WATCHDOG_INTERVAL = 10; // seconds — check if still working
 
 export function getSessionId(): string {
   if (process.env.ITERM_SESSION_ID) return process.env.ITERM_SESSION_ID;
@@ -33,6 +34,14 @@ function timerPidFilePath(sessionId: string): string {
   return path.join(gradientStateDir, `${sessionId}.timer_pid`);
 }
 
+function heartbeatFilePath(sessionId: string): string {
+  return path.join(gradientStateDir, `${sessionId}.heartbeat`);
+}
+
+function watchdogPidFilePath(sessionId: string): string {
+  return path.join(gradientStateDir, `${sessionId}.watchdog_pid`);
+}
+
 function killPidFile(filePath: string): void {
   try {
     const pid = parseInt(fs.readFileSync(filePath, "utf-8").trim(), 10);
@@ -52,7 +61,7 @@ function cleanStaleState(): void {
         const t = parseInt(fs.readFileSync(path.join(gradientStateDir, file), "utf-8").trim(), 10);
         if (now - t > STALE_THRESHOLD) {
           const base = file.replace(".start_time", "");
-          for (const ext of [".pid", ".start_time", ".timer_pid"]) {
+          for (const ext of [".pid", ".start_time", ".timer_pid", ".heartbeat", ".watchdog_pid"]) {
             try { fs.unlinkSync(path.join(gradientStateDir, base + ext)); } catch { /* gone */ }
           }
         }
@@ -104,4 +113,32 @@ export function scheduleTimer(project: string): void {
 
 export function cancelTimer(): void {
   killPidFile(timerPidFilePath(getSessionId()));
+}
+
+export function writeHeartbeat(): void {
+  const sessionId = getSessionId();
+  ensureStateDir();
+  fs.writeFileSync(heartbeatFilePath(sessionId), String(Math.floor(Date.now() / 1000)));
+}
+
+export function clearHeartbeat(): void {
+  try { fs.unlinkSync(heartbeatFilePath(getSessionId())); } catch { /* gone */ }
+}
+
+export function startWorkingWatchdog(project: string): void {
+  const sessionId = getSessionId();
+  ensureStateDir();
+  stopWorkingWatchdog();
+
+  const pid = spawnDetached(srcFile("working-watchdog.ts"), [
+    sessionId,
+    String(WORKING_WATCHDOG_INTERVAL),
+    project,
+    getTtyPath(),
+  ]);
+  if (pid) fs.writeFileSync(watchdogPidFilePath(sessionId), String(pid));
+}
+
+export function stopWorkingWatchdog(): void {
+  killPidFile(watchdogPidFilePath(getSessionId()));
 }
