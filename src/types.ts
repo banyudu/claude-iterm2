@@ -27,6 +27,5 @@ export interface RGB {
 export interface StatusConfig {
   color: RGB;
   badge: string;
-  bg: string;
   titlePrefix: string;
 }

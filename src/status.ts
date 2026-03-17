@@ -6,8 +6,6 @@ import {
   resetTabColor,
   setBadge,
   clearBadge,
-  setBackground,
-  resetBackground,
   setTitle,
   setUserVar,
 } from "./iterm2.js";
@@ -29,7 +27,6 @@ function applyStatus(
   const cfg = statusConfigs[status];
   setTabColor(cfg.color);
   setBadge(cfg.badge);
-  setBackground(cfg.bg);
   setTitle(`${cfg.titlePrefix} ${project}`);
   setUserVar("ai_status", status);
   setUserVar("ai_project", project);
@@ -76,7 +73,6 @@ export function reset(): void {
   clearHeartbeat();
   resetTabColor();
   clearBadge();
-  resetBackground();
   setTitle(path.basename(process.cwd()));
   setUserVar("ai_status", "idle");
   setUserVar("ai_project", "");

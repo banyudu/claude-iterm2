@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { spawn } from "node:child_process";
-import { gradientStateDir, enableGradient, enableDoneToWaiting, doneToWaitingDelay } from "./config.js";
+import { gradientStateDir, enableGradient, enableDoneToWaiting, doneToWaitingDelay, cacheTimeout } from "./config.js";
 import { getTtyPath } from "./iterm2.js";
 import { tsxBin, srcFile } from "./paths.js";
 
@@ -75,7 +75,10 @@ function spawnDetached(script: string, args: string[]): number | undefined {
     detached: true,
     stdio: "ignore",
     cwd: process.cwd(),
-    env: process.env,
+    env: {
+      ...process.env,
+      AI_CACHE_TIMEOUT: String(cacheTimeout),
+    },
   });
   child.unref();
   return child.pid;

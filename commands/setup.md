@@ -30,11 +30,11 @@ Present each feature and ask whether to enable/disable it. The features are:
 
 - **Tab colors** (`tabColor`) — Changes tab bar color based on status. Default: on
 - **Badge text** (`badge`) — Shows status text (Working.../Done/etc.) as a watermark in the pane. Default: on
-- **Background tint** (`bgTint`) — Subtle background color change. Default: off (can be distracting)
 - **Desktop notifications** (`notification`) — macOS notification when tasks complete. Default: on
 - **Sound** (`sound`) — Sound effects on status change. Default: on
 - **Gradient animation** (`gradient`) — Waiting state tab color animates from yellow to orange. Default: on
 - **Auto-transition** (`doneToWaiting`) — Done state automatically becomes waiting after a delay. Default: on
+- **Cache timeout** (`cacheTimeout`) — Cache expiry window in seconds (300 default, set 3600 for Claude Max). Default: 300
 
 Ask the user which features they want. Use a simple format like:
 "Which features would you like enabled? (all are on by default except background tint)"

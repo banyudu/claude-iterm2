@@ -1,6 +1,6 @@
 import fs from "node:fs";
 import type { RGB } from "./types.js";
-import { enableTabColor, enableBadge, enableBgTint } from "./config.js";
+import { enableTabColor, enableBadge } from "./config.js";
 
 let _ttyFd: number | null = null;
 let _isITerm: boolean | null = null;
@@ -70,15 +70,6 @@ export function clearBadge(): void {
   writeTty(`\x1b]1337;SetBadgeFormat=\x07`);
 }
 
-export function setBackground(hex: string): void {
-  if (!isITerm() || !enableBgTint) return;
-  writeTty(`\x1b]1337;SetColors=bg=${hex}\x07`);
-}
-
-export function resetBackground(): void {
-  if (!isITerm() || !enableBgTint) return;
-  writeTty(`\x1b]1337;SetColors=bg=default\x07`);
-}
 
 export function setTitle(title: string): void {
   if (!isITerm()) return;

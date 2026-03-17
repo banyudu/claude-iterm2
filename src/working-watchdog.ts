@@ -6,6 +6,8 @@
 
 import fs from "node:fs";
 import path from "node:path";
+import { spawn } from "node:child_process";
+import { tsxBin, srcFile } from "./paths.js";
 
 const sessionId = process.argv[2];
 const intervalSec = parseInt(process.argv[3] ?? "10", 10);
@@ -17,6 +19,8 @@ if (!sessionId || !ttyPath) process.exit(1);
 const stateDir = "/tmp/ai-gradient";
 const heartbeatFile = path.join(stateDir, `${sessionId}.heartbeat`);
 const watchdogPidFile = path.join(stateDir, `${sessionId}.watchdog_pid`);
+const gradientPidFile = path.join(stateDir, `${sessionId}.pid`);
+const gradientStartTimeFile = path.join(stateDir, `${sessionId}.start_time`);
 
 // Threshold: if no heartbeat for this many seconds, assume agent is idle
 const STALE_THRESHOLD = 30;
@@ -47,10 +51,6 @@ function setBadge(text: string): void {
   writeTty(`\x1b]1337;SetBadgeFormat=${encoded}\x07`);
 }
 
-function setBackground(hex: string): void {
-  writeTty(`\x1b]1337;SetColors=bg=${hex}\x07`);
-}
-
 function setUserVar(name: string, value: string): void {
   const encoded = Buffer.from(value).toString("base64");
   writeTty(`\x1b]1337;SetUserVar=${name}=${encoded}\x07`);
@@ -79,8 +79,17 @@ function tick(): void {
     // Transition to "Waiting" state
     setTabColor(234, 179, 8); // yellow
     setBadge("Input Needed");
-    setBackground("1e1c0d");
     setUserVar("ai_status", "waiting");
+
+    // Start gradient loop for the waiting state
+    fs.writeFileSync(gradientStartTimeFile, String(Math.floor(Date.now() / 1000)));
+    const child = spawn(tsxBin, [srcFile("gradient-loop.ts"), sessionId, ttyPath], {
+      detached: true,
+      stdio: "ignore",
+      env: { ...process.env, AI_CACHE_TIMEOUT: process.env.AI_CACHE_TIMEOUT ?? "300" },
+    });
+    child.unref();
+    if (child.pid) fs.writeFileSync(gradientPidFile, String(child.pid));
 
     // Clean up our PID file and exit
     try { fs.unlinkSync(watchdogPidFile); } catch {}

@@ -44,11 +44,11 @@ switch (action) {
     const [key, value] = rest;
     if (!key || value === undefined) {
       console.error("Usage: cli.ts set <key> <value>");
-      console.error("Keys: tabColor, badge, bgTint, notification, sound, gradient, doneToWaiting, gradientDuration, doneToWaitingDelay");
+      console.error("Keys: tabColor, badge, notification, sound, gradient, doneToWaiting, gradientDuration, doneToWaitingDelay, cacheTimeout");
       process.exit(1);
     }
-    const boolKeys = ["tabColor", "badge", "bgTint", "notification", "sound", "gradient", "doneToWaiting"];
-    const numKeys = ["gradientDuration", "doneToWaitingDelay"];
+    const boolKeys = ["tabColor", "badge", "notification", "sound", "gradient", "doneToWaiting"];
+    const numKeys = ["gradientDuration", "doneToWaitingDelay", "cacheTimeout"];
     if (boolKeys.includes(key)) {
       save({ [key]: value === "true" || value === "1" } as Partial<Settings>);
       console.log(`Set ${key} = ${value === "true" || value === "1"}`);
@@ -98,12 +98,12 @@ Config commands:
 Config keys:
   tabColor            - Tab color changes (true/false)
   badge               - Badge text in corner (true/false)
-  bgTint              - Background color tint (true/false)
   notification        - Desktop notifications (true/false)
   sound               - Sound notifications (true/false)
   gradient            - Gradient animation for waiting (true/false)
   doneToWaiting       - Auto-transition done->waiting (true/false)
   gradientDuration    - Gradient duration in seconds (number)
-  doneToWaitingDelay  - Done->waiting delay in seconds (number)`);
+  doneToWaitingDelay  - Done->waiting delay in seconds (number)
+  cacheTimeout        - Cache expiry timeout in seconds (number, default 300)`);
     process.exit(1);
 }

@@ -38,7 +38,6 @@ function envStr(key: string, defaultVal: string): string {
 // Feature toggles: settings file -> env var override
 export const enableTabColor = envBool("AI_ENABLE_TAB_COLOR", settings.tabColor);
 export const enableBadge = envBool("AI_ENABLE_BADGE", settings.badge);
-export const enableBgTint = envBool("AI_ENABLE_BG_TINT", settings.bgTint);
 export const enableNotification = envBool("AI_ENABLE_NOTIFICATION", settings.notification);
 export const disableSound = envBoolInverted("AI_DISABLE_SOUND", settings.sound);
 export const enableGradient = envBool("AI_ENABLE_GRADIENT", settings.gradient);
@@ -47,6 +46,7 @@ export const enableDoneToWaiting = envBool("AI_ENABLE_DONE_TO_WAITING", settings
 // Timing
 export const gradientDuration = envInt("AI_GRADIENT_DURATION", settings.gradientDuration);
 export const doneToWaitingDelay = envInt("AI_DONE_TO_WAITING_DELAY", settings.doneToWaitingDelay);
+export const cacheTimeout = envInt("AI_CACHE_TIMEOUT", settings.cacheTimeout);
 
 // Sound
 export const soundVol = envFloat("AI_SOUND_VOL", 3);
@@ -66,25 +66,21 @@ export const statusConfigs: Record<Exclude<Status, "idle">, StatusConfig> = {
   working: {
     color: { r: 59, g: 130, b: 246 },
     badge: "Working...",
-    bg: "0d1a2e",
     titlePrefix: "[...]",
   },
   waiting: {
     color: { r: 234, g: 179, b: 8 },
     badge: "Input Needed",
-    bg: "1e1c0d",
     titlePrefix: "[?]",
   },
   done: {
     color: { r: 34, g: 197, b: 94 },
     badge: "Done",
-    bg: "0d1e10",
     titlePrefix: "[OK]",
   },
   error: {
     color: { r: 239, g: 68, b: 68 },
     badge: "Error",
-    bg: "1e0d0d",
     titlePrefix: "[!]",
   },
 };
