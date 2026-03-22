@@ -12,6 +12,7 @@ export type Status = "idle" | "working" | "waiting" | "done" | "error";
 
 export interface HookInput {
   hook_event_name: HookEventName;
+  session_id?: string;
   tool_name?: string;
   notification_type?: string;
   is_interrupt?: boolean;

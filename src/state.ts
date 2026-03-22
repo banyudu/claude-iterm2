@@ -61,7 +61,7 @@ function cleanStaleState(): void {
         const t = parseInt(fs.readFileSync(path.join(gradientStateDir, file), "utf-8").trim(), 10);
         if (now - t > STALE_THRESHOLD) {
           const base = file.replace(".start_time", "");
-          for (const ext of [".pid", ".start_time", ".timer_pid", ".heartbeat", ".watchdog_pid"]) {
+          for (const ext of [".pid", ".start_time", ".timer_pid", ".heartbeat", ".watchdog_pid", ".claude_session"]) {
             try { fs.unlinkSync(path.join(gradientStateDir, base + ext)); } catch { /* gone */ }
           }
         }
@@ -122,6 +122,25 @@ export function writeHeartbeat(): void {
   const sessionId = getSessionId();
   ensureStateDir();
   fs.writeFileSync(heartbeatFilePath(sessionId), String(Math.floor(Date.now() / 1000)));
+}
+
+function claudeSessionFilePath(sessionId: string): string {
+  return path.join(gradientStateDir, `${sessionId}.claude_session`);
+}
+
+export function writeClaudeSessionId(claudeSessionId: string): void {
+  const sessionId = getSessionId();
+  ensureStateDir();
+  fs.writeFileSync(claudeSessionFilePath(sessionId), claudeSessionId);
+}
+
+export function readClaudeSessionId(): string | undefined {
+  const sessionId = getSessionId();
+  try {
+    return fs.readFileSync(claudeSessionFilePath(sessionId), "utf-8").trim();
+  } catch {
+    return undefined;
+  }
 }
 
 export function clearHeartbeat(): void {
