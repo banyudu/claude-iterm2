@@ -1,7 +1,7 @@
 import path from "node:path";
 import type { HookInput } from "./types.js";
 import { setWorking, setWaiting, setDone, setError, reset } from "./status.js";
-import { writeHeartbeat } from "./state.js";
+import { writeHeartbeat, writeClaudeSessionId } from "./state.js";
 
 function readStdin(): Promise<string> {
   return new Promise((resolve, reject) => {
@@ -26,6 +26,11 @@ async function main(): Promise<void> {
 
   // Write heartbeat on every event so background processes can detect stale sessions
   writeHeartbeat();
+
+  // Persist Claude session ID so /iterm2:fork can read it
+  if (input.session_id) {
+    writeClaudeSessionId(input.session_id);
+  }
 
   switch (event) {
     case "UserPromptSubmit":
