@@ -10,6 +10,7 @@ iTerm2 visual status indicators and grid layouts for Claude Code.
 - **Desktop Notifications** — Get notified when tasks complete (clicks focus the right pane)
 - **Sound Notifications** — Configurable per-state sounds
 - **Grid Layouts** — Create organized multi-pane layouts in new tabs
+- **Fork Session** — Fork the current conversation into a new iTerm2 pane or tab
 - **Auto-Transition** — Done state transitions to waiting after configurable delay
 
 ## Installation
@@ -23,6 +24,8 @@ claude plugin marketplace add banyudu/claude-iterm2
 # Install the plugin
 claude plugin install iterm2@claude-iterm2
 ```
+
+Dependencies (`tsx`) are automatically installed on first session start via a `SessionStart` hook — no manual `npm install` required.
 
 ### From Local Clone
 
@@ -70,6 +73,14 @@ Settings are stored in `~/.config/claude-iterm2/config.json`.
 /iterm2:grid 3x3        # 9-pane grid
 ```
 
+### Fork Session
+
+```
+/iterm2:fork            # Fork into vertical split (default)
+/iterm2:fork --horizontal  # Fork into horizontal split
+/iterm2:fork --tab      # Fork into a new tab
+```
+
 ### Manual Status Control
 
 ```
@@ -84,13 +95,13 @@ Settings are stored in `~/.config/claude-iterm2/config.json`.
 |---------|------|---------|-------------|
 | tabColor | bool | true | Tab color changes (blue/yellow/green/red) |
 | badge | bool | true | Badge text watermark (Working.../Done/etc.) |
-| bgTint | bool | false | Background color tint |
 | notification | bool | true | Desktop notifications on completion |
 | sound | bool | true | Sound notifications |
 | gradient | bool | true | Gradient animation for waiting state |
 | doneToWaiting | bool | true | Auto-transition from done to waiting |
 | gradientDuration | number | 60 | Gradient duration (seconds) |
 | doneToWaitingDelay | number | 60 | Done-to-waiting delay (seconds) |
+| cacheTimeout | number | 300 | Cache expiry timeout in seconds (set 3600 for Claude Max) |
 
 Environment variables (e.g., `AI_ENABLE_TAB_COLOR=0`) override saved settings.
 
