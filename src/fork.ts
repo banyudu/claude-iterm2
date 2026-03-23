@@ -15,9 +15,10 @@ Options:
   process.exit(0);
 }
 
-const sessionId = readClaudeSessionId();
+const sessionIdArg = args.find(a => !a.startsWith("-"));
+const sessionId = sessionIdArg || process.env.CLAUDE_SESSION_ID || readClaudeSessionId();
 if (!sessionId) {
-  console.error("Error: No Claude session ID found. The session ID is captured from hook events — make sure the plugin hooks are active.");
+  console.error("Error: No Claude session ID found. Pass it as an argument, set CLAUDE_SESSION_ID, or ensure hooks have fired.");
   process.exit(1);
 }
 

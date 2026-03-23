@@ -1,6 +1,6 @@
 {
   "name": "claude-iterm2",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "iTerm2 visual status indicators and grid layouts for Claude Code",
   "author": "banyudu",
   "license": "MIT",

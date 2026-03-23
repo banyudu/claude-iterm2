@@ -21,7 +21,7 @@ command -v terminal-notifier || echo "terminal-notifier: not found (optional —
 ### 2. Check if config exists
 
 ```bash
-${CLAUDE_PLUGIN_ROOT}/node_modules/.bin/tsx ${CLAUDE_PLUGIN_ROOT}/src/cli.ts show-config
+${CLAUDE_PLUGIN_DATA}/node_modules/.bin/tsx ${CLAUDE_PLUGIN_ROOT}/src/cli.ts show-config
 ```
 
 ### 3. Ask about features
@@ -42,7 +42,7 @@ Ask the user which features they want. Use a simple format like:
 Then apply their choices:
 
 ```bash
-${CLAUDE_PLUGIN_ROOT}/node_modules/.bin/tsx ${CLAUDE_PLUGIN_ROOT}/src/cli.ts set <key> <value>
+${CLAUDE_PLUGIN_DATA}/node_modules/.bin/tsx ${CLAUDE_PLUGIN_ROOT}/src/cli.ts set <key> <value>
 ```
 
 ### 4. Confirm

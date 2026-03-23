@@ -18,14 +18,14 @@ Fork the current Claude Code conversation into a new iTerm2 pane. The new pane w
 
 - iTerm2 must be running
 - macOS only
-- An active Claude session (hooks must have fired at least once to capture the session ID)
+- An active Claude session
 
 ## Instructions
 
 Run the fork script:
 
 ```bash
-${CLAUDE_PLUGIN_ROOT}/node_modules/.bin/tsx ${CLAUDE_PLUGIN_ROOT}/src/fork.ts $ARGUMENTS
+${CLAUDE_PLUGIN_DATA}/node_modules/.bin/tsx ${CLAUDE_PLUGIN_ROOT}/src/fork.ts ${CLAUDE_SESSION_ID} $ARGUMENTS
 ```
 
 Execute this command and report the results to the user.

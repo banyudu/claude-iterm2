@@ -3,7 +3,8 @@ import { fileURLToPath } from "node:url";
 
 const srcDir = path.dirname(fileURLToPath(import.meta.url));
 export const pluginRoot = path.dirname(srcDir);
-export const tsxBin = path.join(pluginRoot, "node_modules", ".bin", "tsx");
+const pluginData = process.env.CLAUDE_PLUGIN_DATA || pluginRoot;
+export const tsxBin = path.join(pluginData, "node_modules", ".bin", "tsx");
 
 export function srcFile(name: string): string {
   return path.join(srcDir, name);

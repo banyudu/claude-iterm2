@@ -25,7 +25,7 @@ Create a new iTerm2 tab with a grid layout where panes are numbered sequentially
 Run the grid creation script:
 
 ```bash
-${CLAUDE_PLUGIN_ROOT}/node_modules/.bin/tsx ${CLAUDE_PLUGIN_ROOT}/src/grid.ts $ARGUMENTS
+${CLAUDE_PLUGIN_DATA}/node_modules/.bin/tsx ${CLAUDE_PLUGIN_ROOT}/src/grid.ts $ARGUMENTS
 ```
 
 The script will:
