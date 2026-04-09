@@ -34,7 +34,7 @@ Panes are numbered left-to-right, top-to-bottom:
 
 ## Script Location
 
-`${CLAUDE_PLUGIN_ROOT}/src/grid.ts`
+`${CLAUDE_PLUGIN_ROOT}/dist/grid.cjs` (run with `node`)
 
 ## Notes
 

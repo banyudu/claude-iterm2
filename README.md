@@ -25,7 +25,7 @@ claude plugin marketplace add banyudu/claude-iterm2
 claude plugin install iterm2@claude-iterm2
 ```
 
-Dependencies (`tsx`) are automatically installed on first session start via a `SessionStart` hook — no manual `npm install` required.
+The plugin ships pre-bundled JavaScript (`dist/`) and runs with the system `node` — no runtime dependencies, no install step.
 
 ### From Local Clone
 

@@ -7,7 +7,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { spawn } from "node:child_process";
-import { tsxBin, srcFile } from "./paths.js";
+import { nodeBin, distFile } from "./paths.js";
 
 const sessionId = process.argv[2];
 const intervalSec = parseInt(process.argv[3] ?? "10", 10);
@@ -83,11 +83,12 @@ function tick(): void {
 
     // Start gradient loop for the waiting state
     fs.writeFileSync(gradientStartTimeFile, String(Math.floor(Date.now() / 1000)));
-    const child = spawn(tsxBin, [srcFile("gradient-loop.ts"), sessionId, ttyPath], {
+    const child = spawn(nodeBin, [distFile("gradient-loop.cjs"), sessionId, ttyPath], {
       detached: true,
       stdio: "ignore",
       env: { ...process.env, AI_CACHE_TIMEOUT: process.env.AI_CACHE_TIMEOUT ?? "300" },
     });
+    child.on("error", () => { /* advisory subprocess */ });
     child.unref();
     if (child.pid) fs.writeFileSync(gradientPidFile, String(child.pid));
 

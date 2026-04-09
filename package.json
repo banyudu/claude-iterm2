@@ -15,24 +15,22 @@
     "registry": "https://registry.npmjs.org/"
   },
   "files": [
-    "src",
+    "dist",
     "hooks",
     "commands",
     "skills",
     ".claude-plugin",
-    "tsconfig.json",
     "README.md",
     "LICENSE"
   ],
-  "dependencies": {
-    "tsx": "^4.19.0"
-  },
   "devDependencies": {
     "@types/node": "^22.0.0",
+    "tsup": "^8.3.0",
     "typescript": "^5.5.0"
   },
   "scripts": {
+    "build": "tsup",
     "typecheck": "tsc --noEmit",
-    "prepublishOnly": "tsc --noEmit"
+    "prepublishOnly": "tsup && tsc --noEmit"
   }
 }
