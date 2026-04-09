@@ -3,7 +3,7 @@ import path from "node:path";
 import { spawn } from "node:child_process";
 import { gradientStateDir, enableGradient, enableDoneToWaiting, doneToWaitingDelay, cacheTimeout } from "./config.js";
 import { getTtyPath } from "./iterm2.js";
-import { tsxBin, srcFile } from "./paths.js";
+import { nodeBin, distFile } from "./paths.js";
 
 const STALE_THRESHOLD = 12 * 3600;
 const WORKING_WATCHDOG_INTERVAL = 10; // seconds — check if still working
@@ -71,7 +71,7 @@ function cleanStaleState(): void {
 }
 
 function spawnDetached(script: string, args: string[]): number | undefined {
-  const child = spawn(tsxBin, [script, ...args], {
+  const child = spawn(nodeBin, [script, ...args], {
     detached: true,
     stdio: "ignore",
     cwd: process.cwd(),
@@ -80,6 +80,9 @@ function spawnDetached(script: string, args: string[]): number | undefined {
       AI_CACHE_TIMEOUT: String(cacheTimeout),
     },
   });
+  // Advisory subprocess — never let a spawn failure (ENOENT, EACCES, …) crash
+  // the hook process and surface as "hook error" to Claude Code.
+  child.on("error", () => { /* noop */ });
   child.unref();
   return child.pid;
 }
@@ -93,7 +96,7 @@ export function startGradient(): void {
 
   fs.writeFileSync(startTimeFilePath(sessionId), String(Math.floor(Date.now() / 1000)));
 
-  const pid = spawnDetached(srcFile("gradient-loop.ts"), [sessionId, getTtyPath()]);
+  const pid = spawnDetached(distFile("gradient-loop.cjs"), [sessionId, getTtyPath()]);
   if (pid) fs.writeFileSync(pidFilePath(sessionId), String(pid));
 }
 
@@ -110,7 +113,7 @@ export function scheduleTimer(project: string): void {
   ensureStateDir();
   cancelTimer();
 
-  const pid = spawnDetached(srcFile("timer.ts"), [String(doneToWaitingDelay), project]);
+  const pid = spawnDetached(distFile("timer.cjs"), [String(doneToWaitingDelay), project]);
   if (pid) fs.writeFileSync(timerPidFilePath(sessionId), String(pid));
 }
 
@@ -152,7 +155,7 @@ export function startWorkingWatchdog(project: string): void {
   ensureStateDir();
   stopWorkingWatchdog();
 
-  const pid = spawnDetached(srcFile("working-watchdog.ts"), [
+  const pid = spawnDetached(distFile("working-watchdog.cjs"), [
     sessionId,
     String(WORKING_WATCHDOG_INTERVAL),
     project,

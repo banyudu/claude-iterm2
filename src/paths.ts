@@ -1,11 +1,14 @@
 import path from "node:path";
-import { fileURLToPath } from "node:url";
 
-const srcDir = path.dirname(fileURLToPath(import.meta.url));
-export const pluginRoot = path.dirname(srcDir);
-const pluginData = process.env.CLAUDE_PLUGIN_DATA || pluginRoot;
-export const tsxBin = path.join(pluginData, "node_modules", ".bin", "tsx");
+// At runtime this module is bundled into dist/*.cjs, so __dirname resolves to
+// the dist directory. Sibling bundles (hook.cjs, working-watchdog.cjs,
+// gradient-loop.cjs, timer.cjs, …) live next to each other.
+// `__dirname` is a CJS-only global; the declaration keeps tsc happy under
+// ESM source mode while esbuild/tsup supplies the real value in CJS output.
+declare const __dirname: string;
 
-export function srcFile(name: string): string {
-  return path.join(srcDir, name);
+export const nodeBin = process.execPath;
+
+export function distFile(name: string): string {
+  return path.join(__dirname, name);
 }
