@@ -1,6 +1,6 @@
 {
   "name": "claude-iterm2",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "iTerm2 visual status indicators and grid layouts for Claude Code",
   "author": "banyudu",
   "license": "MIT",
@@ -10,7 +10,13 @@
     "url": "https://github.com/banyudu/claude-iterm2.git"
   },
   "homepage": "https://banyudu.github.io/claude-iterm2/",
-  "keywords": ["claude", "claude-code", "iterm2", "terminal", "status"],
+  "keywords": [
+    "claude",
+    "claude-code",
+    "iterm2",
+    "terminal",
+    "status"
+  ],
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
   },
