@@ -37,6 +37,6 @@
   "scripts": {
     "build": "tsup && chmod +x dist/*.cjs",
     "typecheck": "tsc --noEmit",
-    "prepublishOnly": "tsup && tsc --noEmit"
+    "prepublishOnly": "tsup && chmod +x dist/*.cjs && tsc --noEmit"
   }
 }
