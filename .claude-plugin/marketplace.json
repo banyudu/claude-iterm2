@@ -8,7 +8,7 @@
     {
       "name": "iterm2",
       "description": "Automatically changes iTerm2 tab colors, badges, and sends notifications based on Claude Code agent events",
-      "version": "0.2.3",
+      "version": "0.2.4",
       "author": {
         "name": "banyudu"
       },
