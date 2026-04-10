@@ -29,7 +29,7 @@
     "typescript": "^5.5.0"
   },
   "scripts": {
-    "build": "tsup",
+    "build": "tsup && chmod +x dist/*.cjs",
     "typecheck": "tsc --noEmit",
     "prepublishOnly": "tsup && tsc --noEmit"
   }

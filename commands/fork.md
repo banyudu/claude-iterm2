@@ -25,7 +25,7 @@ Fork the current Claude Code conversation into a new iTerm2 pane. The new pane w
 Run the fork script:
 
 ```bash
-node ${CLAUDE_PLUGIN_ROOT}/dist/fork.cjs ${CLAUDE_SESSION_ID} $ARGUMENTS
+${CLAUDE_PLUGIN_ROOT}/dist/fork.cjs ${CLAUDE_SESSION_ID} $ARGUMENTS
 ```
 
 Execute this command and report the results to the user.

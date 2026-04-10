@@ -15,7 +15,7 @@ View or modify the plugin's settings. Settings are stored in `~/.config/claude-i
 If the user wants to see current settings (or no argument given):
 
 ```bash
-node ${CLAUDE_PLUGIN_ROOT}/dist/cli.cjs show-config
+${CLAUDE_PLUGIN_ROOT}/dist/cli.cjs show-config
 ```
 
 ### Change a setting
@@ -23,7 +23,7 @@ node ${CLAUDE_PLUGIN_ROOT}/dist/cli.cjs show-config
 If the user wants to change a setting:
 
 ```bash
-node ${CLAUDE_PLUGIN_ROOT}/dist/cli.cjs set <key> <value>
+${CLAUDE_PLUGIN_ROOT}/dist/cli.cjs set <key> <value>
 ```
 
 ### Available settings

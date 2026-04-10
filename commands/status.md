@@ -22,7 +22,7 @@ Manually set or check the iTerm2 visual status indicator.
 Run the CLI:
 
 ```bash
-node ${CLAUDE_PLUGIN_ROOT}/dist/cli.cjs $ARGUMENTS
+${CLAUDE_PLUGIN_ROOT}/dist/cli.cjs $ARGUMENTS
 ```
 
 Report what action was taken and the resulting visual state.

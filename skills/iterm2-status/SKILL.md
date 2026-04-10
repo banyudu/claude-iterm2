@@ -20,12 +20,12 @@ Manually control iTerm2 visual status indicators for Claude Code sessions.
 ## Usage
 
 ```bash
-node ${CLAUDE_PLUGIN_ROOT}/dist/cli.cjs working "my-project"
-node ${CLAUDE_PLUGIN_ROOT}/dist/cli.cjs waiting "my-project"
-node ${CLAUDE_PLUGIN_ROOT}/dist/cli.cjs done "my-project"
-node ${CLAUDE_PLUGIN_ROOT}/dist/cli.cjs error "my-project"
-node ${CLAUDE_PLUGIN_ROOT}/dist/cli.cjs reset
-node ${CLAUDE_PLUGIN_ROOT}/dist/cli.cjs status
+${CLAUDE_PLUGIN_ROOT}/dist/cli.cjs working "my-project"
+${CLAUDE_PLUGIN_ROOT}/dist/cli.cjs waiting "my-project"
+${CLAUDE_PLUGIN_ROOT}/dist/cli.cjs done "my-project"
+${CLAUDE_PLUGIN_ROOT}/dist/cli.cjs error "my-project"
+${CLAUDE_PLUGIN_ROOT}/dist/cli.cjs reset
+${CLAUDE_PLUGIN_ROOT}/dist/cli.cjs status
 ```
 
 ## Features

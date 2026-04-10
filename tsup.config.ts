@@ -10,6 +10,7 @@ export default defineConfig({
     "gradient-loop": "src/gradient-loop.ts",
     timer: "src/timer.ts",
   },
+  banner: { js: "#!/usr/bin/env node" },
   format: ["cjs"],
   outExtension: () => ({ js: ".cjs" }),
   target: "node18",
